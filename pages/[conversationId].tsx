@@ -1,7 +1,12 @@
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Message from '../components/Message';
 import MessageInput from '../components/MessageInput';
+
+interface Conversation {
+  id: string;
+  messages: { user: string; content: string }[];
+}
 
 const ConversationPage: React.FC = () => {
   const router = useRouter();
@@ -9,8 +14,27 @@ const ConversationPage: React.FC = () => {
 
   const [messages, setMessages] = useState<{ user: string; content: string }[]>([]);
 
+  useEffect(() => {
+    fetch('/api/conversations')
+      .then(response => response.json())
+      .then((data: { conversations: Conversation[] }) => {
+        const conversation = data.conversations.find((c: Conversation) => c.id === conversationId)
+        if (conversation) {
+          setMessages(conversation.messages)
+        }
+      })
+  }, [conversationId])
+
   const handleSend = (message: string) => {
-    setMessages([...messages, { user: 'User', content: message }]);
+    const newMessages = [...messages, { user: 'User', content: message }]
+    setMessages(newMessages);
+    fetch('/api/conversations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: conversationId, messages: newMessages }),
+    })
   };
 
   return (
