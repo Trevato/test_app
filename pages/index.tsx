@@ -1,12 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+
+interface Conversation {
+  id: string;
+  messages: { user: string; content: string }[];
+}
 
 const Home = () => {
   const [conversations, setConversations] = useState<string[]>([]);
 
+  useEffect(() => {
+    fetch('/api/conversations')
+      .then(response => response.json())
+      .then((data: { conversations: Conversation[] }) => setConversations(data.conversations.map(c => c.id)))
+  }, [])
+
   const handleNewConversation = () => {
     const id = Math.random().toString(36).substring(7);
     setConversations([...conversations, id]);
+    fetch('/api/conversations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, messages: [] }),
+    })
   };
 
   return (
