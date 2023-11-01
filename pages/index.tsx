@@ -1,13 +1,31 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import { useState } from 'react';
+import Link from 'next/link';
 
-const inter = Inter({ subsets: ['latin'] })
+const Home = () => {
+  const [conversations, setConversations] = useState<string[]>([]);
 
-export default function Home() {
+  const handleNewConversation = () => {
+    const id = Math.random().toString(36).substring(7);
+    setConversations([...conversations, id]);
+  };
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-    </main>
-  )
-}
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Conversations</h1>
+      <button onClick={handleNewConversation} className="mb-4 bg-blue-500 text-white rounded p-2 w-full">
+        New Conversation
+      </button>
+      <ul>
+        {conversations.map((id) => (
+          <li key={id}>
+            <Link href={`/${id}`}>
+              <a className="text-blue-500">Conversation {id}</a>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default Home;
