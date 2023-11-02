@@ -1,21 +1,27 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { createClient } from '@supabase/supabase-js'
 
-type Data = {
-  conversations: { id: string, messages: { user: string, content: string }[] }[]
-}
+const supabaseUrl = 'https://xyzcompany.supabase.co'
+const supabaseKey = 'public-anon-key'
+const supabase = createClient(supabaseUrl, supabaseKey)
 
-let conversations: Data['conversations'] = []
-
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
   if (req.method === 'POST') {
     const { id, messages } = req.body
-    conversations.push({ id, messages })
-    res.status(200).json({ conversations })
+    const { data, error } = await supabase
+      .from('conversations')
+      .insert([{ id, messages }])
+    if (error) return res.status(500).json({ error: error.message })
+    return res.status(200).json({ data })
   } else if (req.method === 'GET') {
-    res.status(200).json({ conversations })
+    const { data, error } = await supabase
+      .from('conversations')
+      .select('*')
+    if (error) return res.status(500).json({ error: error.message })
+    return res.status(200).json({ data })
   } else {
     res.status(405).end() // Method Not Allowed
   }
