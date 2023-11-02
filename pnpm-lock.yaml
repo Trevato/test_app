@@ -6,54 +6,60 @@ settings:
 
 dependencies:
   '@supabase/supabase-js':
-    specifier: ^1.28.5
-    version: 1.35.7
+    specifier: 1.28.5
+    version: 1.28.5
   next:
     specifier: 13.5.4
     version: 13.5.4(react-dom@18.2.0)(react@18.2.0)
   react:
-    specifier: ^18.2.0
+    specifier: 18.2.0
     version: 18.2.0
   react-dom:
-    specifier: ^18.2.0
+    specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
 
 devDependencies:
   '@types/node':
-    specifier: ^20.8.2
+    specifier: 20.8.2
     version: 20.8.2
   '@types/react':
-    specifier: ^18.2.24
+    specifier: 18.2.24
     version: 18.2.24
   '@types/react-dom':
-    specifier: ^18.2.8
+    specifier: 18.2.8
     version: 18.2.8
   autoprefixer:
-    specifier: ^10.4.16
+    specifier: 10.4.16
     version: 10.4.16(postcss@8.4.31)
   eslint:
-    specifier: ^8.50.0
+    specifier: 8.50.0
     version: 8.50.0
   eslint-config-next:
     specifier: 13.5.4
     version: 13.5.4(eslint@8.50.0)(typescript@5.2.2)
   eslint-config-prettier:
-    specifier: ^9.0.0
+    specifier: 9.0.0
     version: 9.0.0(eslint@8.50.0)
+  eslint-plugin-react:
+    specifier: ^7.28.0
+    version: 7.33.2(eslint@8.50.0)
+  eslint-plugin-react-hooks:
+    specifier: ^4.3.0
+    version: 4.6.0(eslint@8.50.0)
   eslint-plugin-tailwindcss:
-    specifier: ^3.13.0
+    specifier: 3.13.0
     version: 3.13.0(tailwindcss@3.3.3)
   postcss:
-    specifier: ^8.4.31
+    specifier: 8.4.31
     version: 8.4.31
   prettier:
-    specifier: ^3.0.3
+    specifier: 3.0.3
     version: 3.0.3
   tailwindcss:
-    specifier: ^3.3.3
+    specifier: 3.3.3
     version: 3.3.3
   typescript:
-    specifier: ^5.2.2
+    specifier: 5.2.2
     version: 5.2.2
 
 packages:
@@ -278,14 +284,6 @@ packages:
     resolution: {integrity: sha512-6i/8UoL0P5y4leBIGzvkZdS85RDMG9y1ihZzmTZQ5LdHUYmZ7pKFoj8X0236s3lusPs1Fa5HTQUpwI+UfTcmeA==}
     dev: true
 
-  /@supabase/functions-js@1.3.4:
-    resolution: {integrity: sha512-yYVgkECjv7IZEBKBI3EB5Q7R1p0FJ10g8Q9N7SWKIHUU6i6DnbEGHIMFLyQRm1hmiNWD8fL7bRVEYacmTRJhHw==}
-    dependencies:
-      cross-fetch: 3.1.8
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
   /@supabase/gotrue-js@1.24.0:
     resolution: {integrity: sha512-6PVv7mHCFOxLm6TSBfR7hsq/y3CMKpvzePVR+ZWtlFBTjJ2J87g2OYE9bgC61P5TNeZopUXKw93H92yz0MTALw==}
     dependencies:
@@ -294,8 +292,8 @@ packages:
       - encoding
     dev: false
 
-  /@supabase/postgrest-js@0.37.4:
-    resolution: {integrity: sha512-x+c2rk1fz9s6f1PrGxCJ0QTUgXPDI0G3ngIqD5sSiXhhCyfl8Q5V92mXl2EYtlDhkiUkjFNrOZFhXVbXOHgvDw==}
+  /@supabase/postgrest-js@0.35.1:
+    resolution: {integrity: sha512-N9IOxwgKvek2HqVrC3Usr6hUWvzy53vebsoqLqUBaelu8StATTrhdqaw+9IKthQsn8qoB9A0XD2vN39SGlgd/A==}
     dependencies:
       cross-fetch: 3.1.8
     transitivePeerDependencies:
@@ -319,12 +317,11 @@ packages:
       - encoding
     dev: false
 
-  /@supabase/supabase-js@1.35.7:
-    resolution: {integrity: sha512-X+qCzmj5sH0dozagbLoK7LzysBaWoivO0gsAUAPPBQkQupQWuBfaOqG18gKhlfL0wp2PL888QzhQNScp/IwUfA==}
+  /@supabase/supabase-js@1.28.5:
+    resolution: {integrity: sha512-RZFSkj0tC6YppUVOBDldLLko4BgV8ASY+OiXC1ZxpcwmNInPgGiDkv59kVPN1UC96vnRQ/1fbFngPcwTtb1Qjw==}
     dependencies:
-      '@supabase/functions-js': 1.3.4
       '@supabase/gotrue-js': 1.24.0
-      '@supabase/postgrest-js': 0.37.4
+      '@supabase/postgrest-js': 0.35.1
       '@supabase/realtime-js': 1.7.5
       '@supabase/storage-js': 1.7.3
     transitivePeerDependencies:
