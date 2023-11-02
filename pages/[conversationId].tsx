@@ -4,9 +4,9 @@ import Message from '../components/Message';
 import MessageInput from '../components/MessageInput';
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'https://xyzcompany.supabase.co'
-const supabaseKey = 'public-anon-key'
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 interface Message {
   id: string;
@@ -21,31 +21,37 @@ const ConversationPage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    fetchMessages();
-    const subscription = supabase
-      .from(`messages:conversation_id=eq.${conversationId}`)
-      .on('*', () => fetchMessages())
-      .subscribe()
-    return () => {
-      supabase.removeSubscription(subscription)
+    if (supabase) {
+      fetchMessages();
+      const subscription = supabase
+        .from(`messages:conversation_id=eq.${conversationId}`)
+        .on('*', () => fetchMessages())
+        .subscribe()
+      return () => {
+        supabase.removeSubscription(subscription)
+      }
     }
-  }, [conversationId])
+  }, [conversationId, supabase])
 
   const fetchMessages = async () => {
-    const { data, error } = await supabase
-      .from('messages')
-      .select('*')
-      .eq('conversation_id', conversationId)
-    if (error) console.log('error', error)
-    else setMessages(data as Message[])
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('conversation_id', conversationId)
+      if (error) console.log('error', error)
+      else setMessages(data as Message[])
+    }
   }
 
   const handleSend = async (content: string) => {
-    const { data, error } = await supabase
-      .from('messages')
-      .insert([{ content, conversation_id: conversationId }])
-    if (error) console.log('error', error)
-    else setMessages([...messages, data[0] as Message])
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('messages')
+        .insert([{ content, conversation_id: conversationId }])
+      if (error) console.log('error', error)
+      else setMessages([...messages, data[0] as Message])
+    }
   }
 
   return (
