@@ -41,10 +41,10 @@ devDependencies:
     specifier: 9.0.0
     version: 9.0.0(eslint@8.50.0)
   eslint-plugin-react:
-    specifier: ^7.28.0
+    specifier: ^7.33.2
     version: 7.33.2(eslint@8.50.0)
   eslint-plugin-react-hooks:
-    specifier: ^4.3.0
+    specifier: ^4.6.0
     version: 4.6.0(eslint@8.50.0)
   eslint-plugin-tailwindcss:
     specifier: 3.13.0

@@ -2,38 +2,44 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'https://xyzcompany.supabase.co'
-const supabaseKey = 'public-anon-key'
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 const Home = () => {
   const [conversations, setConversations] = useState<any[]>([]);
 
   useEffect(() => {
-    fetchConversations();
-    const subscription = supabase
-      .from('conversations')
-      .on('*', () => fetchConversations())
-      .subscribe()
-    return () => {
-      supabase.removeSubscription(subscription)
+    if (supabase) {
+      fetchConversations();
+      const subscription = supabase
+        .from('conversations')
+        .on('*', () => fetchConversations())
+        .subscribe()
+      return () => {
+        supabase.removeSubscription(subscription)
+      }
     }
   }, [])
 
   const fetchConversations = async () => {
-    const { data, error } = await supabase
-      .from('conversations')
-      .select('id')
-    if (error) console.log('error', error)
-    else setConversations(data)
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('conversations')
+        .select('id')
+      if (error) console.log('error', error)
+      else setConversations(data)
+    }
   }
 
   const handleNewConversation = async () => {
-    const { data, error } = await supabase
-      .from('conversations')
-      .insert([{ id: Math.random().toString(36).substring(7) }])
-    if (error) console.log('error', error)
-    else setConversations([...conversations, data[0].id])
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('conversations')
+        .insert([{ id: Math.random().toString(36).substring(7) }])
+      if (error) console.log('error', error)
+      else setConversations([...conversations, data[0].id])
+    }
   }
 
   return (
