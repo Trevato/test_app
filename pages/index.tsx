@@ -1,31 +1,40 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { createClient } from '@supabase/supabase-js'
 
-interface Conversation {
-  id: string;
-  messages: { user: string; content: string }[];
-}
+const supabaseUrl = 'https://xyzcompany.supabase.co'
+const supabaseKey = 'public-anon-key'
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 const Home = () => {
-  const [conversations, setConversations] = useState<string[]>([]);
+  const [conversations, setConversations] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('/api/conversations')
-      .then(response => response.json())
-      .then((data: { conversations: Conversation[] }) => setConversations(data.conversations.map(c => c.id)))
+    fetchConversations();
+    const subscription = supabase
+      .from('conversations')
+      .on('*', () => fetchConversations())
+      .subscribe()
+    return () => {
+      supabase.removeSubscription(subscription)
+    }
   }, [])
 
-  const handleNewConversation = () => {
-    const id = Math.random().toString(36).substring(7);
-    setConversations([...conversations, id]);
-    fetch('/api/conversations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id, messages: [] }),
-    })
-  };
+  const fetchConversations = async () => {
+    const { data, error } = await supabase
+      .from('conversations')
+      .select('id')
+    if (error) console.log('error', error)
+    else setConversations(data)
+  }
+
+  const handleNewConversation = async () => {
+    const { data, error } = await supabase
+      .from('conversations')
+      .insert([{ id: Math.random().toString(36).substring(7) }])
+    if (error) console.log('error', error)
+    else setConversations([...conversations, data[0].id])
+  }
 
   return (
     <div className="p-4">
@@ -34,10 +43,10 @@ const Home = () => {
         New Conversation
       </button>
       <ul>
-        {conversations.map((id) => (
-          <li key={id}>
-            <Link href={`/${id}`}>
-              <a className="text-blue-500">Conversation {id}</a>
+        {conversations.map((conversation) => (
+          <li key={conversation.id}>
+            <Link href={`/${conversation.id}`}>
+              <a className="text-blue-500">Conversation {conversation.id}</a>
             </Link>
           </li>
         ))}
